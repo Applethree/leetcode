@@ -1,0 +1,67 @@
+这道求最长有效括号比之前那道 Valid Parentheses 验证括号难度要大一些，这里我们还是借助栈来求解，需要定义个start变量来记录合法括号串的起始位置，我们遍历字符串，如果遇到左括号，则将当前下标压入栈，如果遇到右括号，如果当前栈为空，则将下一个坐标位置记录到start，如果栈不为空，则将栈顶元素取出，此时若栈为空，则更新结果和i - start + 1中的较大值，否则更新结果和i - 栈顶元素中的较大值，代码如下：
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int res = 0, start = 0;
+        stack<int> m;
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] == '(') m.push(i);
+            else if (s[i] == ')') {
+                if (m.empty()) start = i + 1;
+                else {
+                    m.pop();
+                    res = m.empty() ? max(res, i - start + 1) : max(res, i - m.top());
+                }
+            }
+        }
+        return res;
+    }
+};
+
+
+
+
+思路1：DP
+
+求极值问题一般想到DP或Greedy，显然Greedy在这里不太适用，只有用DP了。
+
+1. 状态：
+DP[i]：以s[i-1]为结尾的longest valid parentheses substring的长度。
+
+2. 通项公式：
+s[i] = '('：
+DP[i] = 0
+
+s[i] = ')'：找i前一个字符的最长括号串DP[i]的前一个字符j = i-2-DP[i-1]
+DP[i] = DP[i-1] + 2 + DP[j]，如果j >=0，且s[j] = '('
+DP[i] = 0，如果j<0，或s[j] = ')'
+
+......... (     x    x    x    x   )
+          j                      i-2 i-1
+
+证明：不存在j' < j，且s[j' : i]为valid parentheses substring。
+假如存在这样的j'，则s[j'+1 : i-1]也valid。那么对于i-1来说：
+(    x    x    x    x    x
+j'  j'+1                  i-1
+这种情况下，i-1是不可能有比S[j'+1 : i-1]更长的valid parentheses substring的。
+
+3. 计算方向
+显然自左向右，且DP[0] = 0
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int n = s.size(), maxLen = 0;
+        vector<int> dp(n+1,0);
+        for(int i=1; i<=n; i++) {
+            int j = i-2-dp[i-1];
+            if(s[i-1]=='(' || j<0 || s[j]==')') 
+                dp[i] = 0;
+            else {
+                dp[i] = dp[i-1]+2+dp[j];
+                maxLen = max(maxLen, dp[i]);
+            }
+        }
+        return maxLen;
+    }
+};
