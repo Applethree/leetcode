@@ -1,1 +1,28 @@
 这道题说的是有一个非负整数的数组，每个数字表示在当前位置的基础上最多可以走的步数，求判断能不能到达最后一个位置，开始我以为是必须刚好到达最后一个位置，超过了不算，其实是理解题意有误，因为每个位置上的数字表示的是最多可以走的步数而不是像玩大富翁一样摇骰子摇出几一定要走几步。那么我们可以用动态规划Dynamic Programming来解，我们维护一个一位数组dp，其中dp[i]表示走道i位置时剩余的最大步数，那么递推公式为：dp[i] = max(dp[i - 1], A[i - 1]) - 1，如果当某一个时刻dp数组的值为负了，说明无法抵达当前位置，则直接返回false，最后我们判断dp数组最后一位是否为非负数即可知道是否能抵达该位置，代码如下：
+
+class Solution {
+public:
+    bool canJump(int A[], int n) {
+        vector<int> dp(n, 0);
+        for (int i = 1; i < n; ++i) {
+            dp[i] = max(dp[i - 1], A[i - 1]) - 1;
+            if (dp[i] < 0) return false;
+        }
+        return dp[n - 1] >= 0;
+    }
+};
+
+
+class Solution {
+public:
+    bool canJump(int A[], int n) {
+        int maxIdx = 0;
+        for (int i = 0; i < n; ++i) {
+            if (i > maxIdx || maxIdx >= n - 1) break;
+            maxIdx = max(maxIdx, i + A[i]);
+        }
+        return maxIdx >= n - 1;
+    }
+};
+
+
