@@ -1,4 +1,8 @@
-这道题让我们求最大子数组之和，并且要我们用两种方法来解，分别是O(n)的解法，还有用分治法Divide and Conquer Approach，这个解法的时间复杂度是O(nlgn)，那我们就先来看O(n)的解法，定义两个变量res和curSum，其中res保存最终要返回的结果，即最大的子数组之和，curSum初始值为0，每遍历一个数字num，比较curSum + num和num中的较大值存入curSum，然后再把res和curSum中的较大值存入res，以此类推直到遍历完整个数组，可得到最大子数组的值存在res中，代码如下：
+这道题让我们求最大子数组之和，并且要我们用两种方法来解，分别是O(n)的解法，
+还有用分治法Divide and Conquer Approach，这个解法的时间复杂度是O(nlgn)，
+那我们就先来看O(n)的解法，定义两个变量res和curSum，其中res保存最终要返回的结果，
+即最大的子数组之和，curSum初始值为0，每遍历一个数字num，比较curSum + num和num中的较大值存入curSum，
+然后再把res和curSum中的较大值存入res，以此类推直到遍历完整个数组，可得到最大子数组的值存在res中，代码如下：
 
 class Solution {
 public:
