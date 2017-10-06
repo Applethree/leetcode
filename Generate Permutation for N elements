@@ -1,0 +1,42 @@
+// Swap two variables of type T
+template<typename T>
+void Swap(T &a, T &b)
+{
+    T temp = a ;
+    a = b ;
+    b = temp ;
+}
+
+// t: the buffer to store the elements of type T
+// k: the index of the first element 
+// m: the index of the last elment
+template<typename T>
+void Perm(T t[], int k, int m) 
+{
+    if(k == m)
+    {
+        for(int i = 0; i <= k; i++)
+        {
+            cout << t[i] << " " ;
+        }
+        cout << endl ;
+    }
+    else
+    {
+        for(int i = k; i <= m; i++)
+        {
+            Swap(t[i], t[k]) ;
+            Perm(t, k + 1, m) ;
+            Swap(t[i], t[k]) ;
+        }
+    }
+}
+
+
+C++版的Swap函数还可以写成
+void Swap(T *a, T *b)
+{
+    T temp = *a ;
+    *a = *b ;
+    *b = temp ;
+}
