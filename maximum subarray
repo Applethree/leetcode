@@ -1,0 +1,42 @@
+这道题让我们求最大子数组之和，并且要我们用两种方法来解，分别是O(n)的解法，还有用分治法Divide and Conquer Approach，这个解法的时间复杂度是O(nlgn)，那我们就先来看O(n)的解法，定义两个变量res和curSum，其中res保存最终要返回的结果，即最大的子数组之和，curSum初始值为0，每遍历一个数字num，比较curSum + num和num中的较大值存入curSum，然后再把res和curSum中的较大值存入res，以此类推直到遍历完整个数组，可得到最大子数组的值存在res中，代码如下：
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int res = INT_MIN, curSum = 0;
+        for (int num : nums) {
+            curSum = max(curSum + num, num);
+            res = max(res, curSum);
+        }
+        return res;
+    }
+};
+
+
+
+
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        if (nums.empty()) return 0;
+        return helper(nums, 0, (int)nums.size() - 1);
+    }
+    int helper(vector<int>& nums, int left, int right) {
+        if (left >= right) return nums[left];
+        int mid = left + (right - left) / 2;
+        int lmax = helper(nums, left, mid - 1);
+        int rmax = helper(nums, mid + 1, right);
+        int mmax = nums[mid], t = mmax;
+        for (int i = mid - 1; i >= left; --i) {
+            t += nums[i];
+            mmax = max(mmax, t);
+        }
+        t = mmax;
+        for (int i = mid + 1; i <= right; ++i) {
+            t += nums[i];
+            mmax = max(mmax, t);
+        }
+        return max(mmax, max(lmax, rmax));
+    }
+};
