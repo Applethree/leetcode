@@ -1,0 +1,58 @@
+检查回文最直接的方法是将整数转换成字符串，然后用Valid Palindrome那题的算法来检查。但是这么做需要有额外内存。
+
+另一种思路是利用Reverse Integer的算法反转整数，对于回文来说，反转后的整数应该与原整数相同。
+如果反转时overflow则一定不是回文。这里需要明确负数到底算不算回文。解中假设不算。
+
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if(x<0) return false;
+        int res=0, y=x;
+        while(y) {
+            if(abs(res)>(INT_MAX/10)) return false;
+            res = res * 10 + y % 10;
+            y /= 10;
+        }
+        return res==x;
+    }
+};
+
+
+网上找到另一个解法：
+
+比较最高位与最低位的数字：如果不同则不是回文，如果相同，则去掉最高和最低位，继续判断。直到所有位数字都被去掉，则一定是回文。关键点在于，如何取出最高和最低位的数字？比较之后如何去掉？
+
+以x = 2332为例：最高位为L，最低位为R
+L = 2332/1000 = 2
+R = 2332%10 = 2
+
+L = R所以要去掉最高最低位继续判断：令y = 1000
+2332 % y = 332
+332 / 10 = 33
+x = (x%y)/10 = 33
+
+如何继续取出最高位？由于删除了两位，y = y/100 = 10
+L = 33/10 = 3
+R = 33%10 = 3
+
+L = R所以继续去掉最高最低位：
+x = (33%10)/10 = 0
+
+x = 0标志了判断结束。
+
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if(x<0) return false;
+        int y = 1;
+        while(x/y>=10) 
+            y *= 10;
+            
+        while(x) {
+            if(x/y != x%10) return false;
+            x = (x % y)/10;
+            y /= 100;
+        }
+        return true;
+    }
+};
